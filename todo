@@ -1,0 +1,16 @@
+Workname MudVR 
+
+Initial:
+    ☐ Setup build pipeline
+
+
+Dungeon Generator:
+    Generate a dungeon based on a specific random seed.
+    Dungeons need to be 
+        ~ random
+        ~ endless
+        ~ the same everytime with a specific seed
+        ~ 'rooms' need to be small
+        ~ big world of rooms, connected in 3 dimensions
+        ~ different styles like biomes
+
