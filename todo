@@ -1,8 +1,7 @@
 Workname MudVR 
 
 Initial:
-    ☐ Setup build pipeline
-
+    ✔ Setup build pipeline @done(19-09-26 22:42)
 
 Dungeon Generator:
     Generate a dungeon based on a specific random seed.
@@ -13,4 +12,17 @@ Dungeon Generator:
         ~ 'rooms' need to be small
         ~ big world of rooms, connected in 3 dimensions
         ~ different styles like biomes
+Room:
+    ☐ 4 walls, a floor and a ceiling
+    
+
+World state:
+    Stored in an Azure Table as soon as anything changes
+    Azure function to retreive data on entering a room
+    Azure functions need to send a push/websocket call when someone changes a room
+    Azure function to save data on a change
+
+Ideas:
+    Use a similar texturing trick as in the 2017 entry for JS13K. With changing the color of a texture based on a different palette. So biomes are colored specificly.
+
 

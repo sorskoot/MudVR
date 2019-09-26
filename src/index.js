@@ -1,1 +1,1 @@
-console.log("Hello From JavaScript");
+import './component/dungeon-generator.component';
