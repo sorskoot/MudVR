@@ -8,13 +8,17 @@
 - Voronoi/Delaunay
 
 ## Inspiration
-- The Happening
-- The Matrix
-- 1984
-- Early 1900s rise of Naziism
+- The Happening (movie about mass suicide)
+- The Matrix (duh)
+- 1984 (book)
+- The Wave (experiment based on rise of Naziism)
 
 ## links
 - http://learningthreejs.com/blog/2013/08/02/how-to-do-a-procedural-city-in-100lines/
 - https://www.youtube.com/watch?time_continue=2&v=WumyfLEa6bU
 - http://computationalcreativity.net/iccc2019/
 - http://tracery.io/
+
+## random ideas
+- integrate with Discord
+- integrate with Twitch

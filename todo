@@ -3,6 +3,13 @@ Workname MudVR
 Initial:
     ✔ Setup build pipeline @done(19-09-26 22:42)
 
+v0.1:
+    - Very Basic Dungeon generator
+    - Move around
+    - Some kind of enemy
+    - Some kind of weapon to fight the enemy
+    - XP
+
 Dungeon Generator:
     Generate a dungeon based on a specific random seed.
     Dungeons need to be 
