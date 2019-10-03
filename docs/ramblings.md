@@ -2,6 +2,7 @@
 
 ## Search Terms
 - procedural generated content
+- procedural narrative generation
 - L-Systems
 - Distribution: Barnacling, Footing, Greebling
 - Voronoi/Delaunay
