@@ -4,6 +4,7 @@
 - procedural generated content
 - L-Systems
 - Distribution: Barnacling, Footing, Greebling
+- Voronoi/Delaunay
 
 ## Inspiration
 - The Happening
