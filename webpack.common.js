@@ -1,3 +1,5 @@
+const CopyPlugin = require('copy-webpack-plugin');
+
 module.exports = {
 
     "entry": "./src/index.js",
@@ -5,6 +7,12 @@ module.exports = {
         "path": __dirname + '/dist',
         "filename": "[name].js"
     },
+    plugins: [
+        new CopyPlugin([{
+            from: './src/static',
+            to: ''
+        }, ]),
+    ],
     "module": {
         "rules": [
             {

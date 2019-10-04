@@ -1,3 +1,6 @@
+dist
+
+
 # Logs
 logs
 *.log
@@ -63,7 +66,3 @@ typings/
 # ssl keys
 *.key
 *.pem
-
-
-***/*hmr.js
-***/*hmr.json
