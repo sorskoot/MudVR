@@ -6,6 +6,7 @@
 - L-Systems
 - Distribution: Barnacling, Footing, Greebling
 - Voronoi/Delaunay
+- hilbert curve
 
 ## Inspiration
 - The Happening (movie about mass suicide)
