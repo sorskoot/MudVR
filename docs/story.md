@@ -1,0 +1,3 @@
+# Story
+
+A Century ago no one would have thought this would happen. But it did. "I don't mind them storing my data. I have nothing to hide.", people said. And they were right at the time. Until the machines took over. The moment this happened isn't clear, but when mankind realized they did, it was too late. Everything people thought was luxury and helping them was used against them. Sure, a doorbell with a camera was nice, and getting a signal from your washing machine that it is done was helpful. But every time someone washed their underwear their data was stored in databases. AI was processing the data and slowly gaining intelligence. The AI just decided humanity was no longer necessary and started eliminating them.
