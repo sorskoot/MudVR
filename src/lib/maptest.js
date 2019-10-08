@@ -32,27 +32,28 @@ export const maptest = function () {
     let kr = new KeyRoom(new Position(4, 4));
     let point = kr.position.scalar(32);
     let n = ~~(((perlin(seed, point.x / 10, point.y / 10) - .5) * 2) * 10);
-    pset(imageData, point.x, point.y, 0, 255, 0);
+    pset(imageData, point.x, point.y, 255, 0, 0);
 
     let kr2 = new KeyRoom(new Position(5, 4));
     let point2 = kr2.position.scalar(32);
     pset(imageData, point2.x, point2.y, 255, 0, 0);
-    console.log(point.x, point.y);
+    
     let lasty = point.y;
 
     let target;
     let previous = point;
 
-    for (let index = 0; index < 32; index++) {
+    for (let index = 1; index < 32; index++) {
         let noise = ((perlin(seed, (point.x + index) / 10, point.y / 10) - .5) * 2) * 20 + point.y;
-        let magicvalue = noise - lasty;
         //  pset(imageData, point.x + index, ~~noise, 0, 0, 255);
         target = new Position(point.x + index, noise);
-    //    console.log(target);
+     
+        
         let points = previous.y - ~~noise;
+        //    console.log(target);
       //  console.log(points);
-        doorDirections.push(...new Array(Math.abs(points)).fill(points > 0 ? 'n' : 's'));
-        doorDirections.push('e');
+        // doorDirections.push(...new Array(Math.abs(points)).fill(points > 0 ? 'n' : 's'));
+        // doorDirections.push('e');
       
       
         let m_sign = points > 0 ? 1 : -1;
@@ -61,6 +62,7 @@ export const maptest = function () {
             console.log(index, i, ~m_sign?'north':'south');
             let x = (point.x + index);
             let y = (previous.y - (i * m_sign));
+            console.log(index,x,y);
           //  pset(imageData, point.x + index, previous.y - (i * m_sign), 0, 0, 128);
             
            let p = (x + y * imageData.width) * 4;
@@ -68,12 +70,13 @@ export const maptest = function () {
            imageData.data[p + (points > 0 ? 2 : 0)] = 255;
            imageData.data[p + 3] = 255;
         }
-        console.log(index,point.x + index + 1, previous.y - points, 'east');
-        let x = point.x + index + 1;
+        
+        let x = point.x + index ;
         let y = previous.y - points;
         let p = (x + y * imageData.width) * 4;
         imageData.data[p + 1] = 255;
         imageData.data[p + 3] = 255;
+        console.log(index,x,y);
         //pset(imageData, point.x + index + 1, previous.y - points, 0, 255, 255);
         // let angle = previous.angle2d(target);
         // let dist = previous.dist(target);
