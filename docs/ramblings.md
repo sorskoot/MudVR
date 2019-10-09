@@ -24,3 +24,4 @@
 ## random ideas
 - integrate with Discord
 - integrate with Twitch
+- Use Artwork as template that can changed randomly for enemies for example.
