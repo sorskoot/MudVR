@@ -20,6 +20,7 @@
 - https://www.youtube.com/watch?time_continue=2&v=WumyfLEa6bU
 - http://computationalcreativity.net/iccc2019/
 - http://tracery.io/
+- https://www.reddit.com/r/gamedev/comments/4vnvbe/an_attempt_at_procedurally_generating_quests_that/
 
 ## random ideas
 - integrate with Discord
