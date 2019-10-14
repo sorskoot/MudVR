@@ -27,17 +27,60 @@ export const maptest = function () {
     let kr = new KeyRoom(new Position(4, 4));
     let point = kr.position.scalar(keyRoomDistance);
     pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
 
-    let kr2 = new KeyRoom(new Position(5, 4));
-    let point2 = kr2.position.scalar(keyRoomDistance);
-    pset(imageData, point2.x, point2.y, 255, 0, 0);
+    kr = new KeyRoom(new Position(5, 4));
+    point = kr.position.scalar(keyRoomDistance);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
+
+    kr = new KeyRoom(new Position(3, 4, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
+
+    kr = new KeyRoom(new Position(3, 3, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
+
+    kr = new KeyRoom(new Position(4, 3, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
+
+    kr = new KeyRoom(new Position(5, 3, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
+
+    kr = new KeyRoom(new Position(3, 5, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
+
+    kr = new KeyRoom(new Position(4, 5, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
+
+    kr = new KeyRoom(new Position(5, 5, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
     
-    let previous = point;
+    ctx.putImageData(imageData, 0, 0); 
 
+    return imageData;
+}
+
+
+function GeneratePaths(point, seed, imageData) {
+    let previous = point;
     // Generate path to EAST
     for (let index = 1; index < keyRoomDistance; index++) {
         let noise = ((perlin(seed, (point.x + index) / 10, point.y / 10) - .5) * 2) * 20;
-        let targetY =  noise * ease((index+1) / keyRoomDistance) + point.y;
+        let targetY = noise * ease((index + 1) / keyRoomDistance) + point.y;
         let points = previous.y - ~~targetY;
         let m_sign = points > 0 ? 1 : -1;
         for (let i = 0; i < Math.abs(points); i++) {
@@ -48,7 +91,6 @@ export const maptest = function () {
             imageData.data[p + (points > 0 ? 2 : 0)] = 255;
             imageData.data[p + 3] = 255;
         }
-
         let x = point.x + index;
         let y = previous.y - points;
         let p = (x + y * imageData.width) * 4;
@@ -56,25 +98,23 @@ export const maptest = function () {
         imageData.data[p + 3] = 255;
         previous = new Position(point.x + index, ~~targetY);
     }
-    
     previous = point;
     // Generate path to SOUTH
     for (let index = 1; index < keyRoomDistance; index++) {
         let noise = ((perlin(seed, point.x / 10, (point.y + index) / 10) - .5) * 2) * 20;
-        let targetX =  noise * ease((index+1) / keyRoomDistance) + point.x;
+        let targetX = noise * ease((index + 1) / keyRoomDistance) + point.x;
         let points = previous.x - ~~targetX;
         let m_sign = points > 0 ? 1 : -1;
         for (let i = 0; i < Math.abs(points); i++) {
             let x = (previous.x - (i * m_sign));
             let y = (point.y + index);
             let p = (x + y * imageData.width) * 4;
-            if(points > 0){
+            if (points > 0) {
                 imageData.data[p + 2] = 255;
             }
             imageData.data[p + 1] = 255;
             imageData.data[p + 3] = 255;
         }
-
         let x = previous.x - points;
         let y = point.y + index;
         let p = (x + y * imageData.width) * 4;
@@ -83,40 +123,7 @@ export const maptest = function () {
         imageData.data[p + 3] = 255;
         previous = new Position(~~targetX, point.y + index);
     }
-
-    kr = new KeyRoom(new Position(3, 4, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-
-    kr = new KeyRoom(new Position(3, 3, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-
-    kr = new KeyRoom(new Position(4, 3, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-
-    kr = new KeyRoom(new Position(5, 3, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-
-    kr = new KeyRoom(new Position(3, 5, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-
-    kr = new KeyRoom(new Position(4, 5, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-
-    kr = new KeyRoom(new Position(5, 5, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-
-    ctx.putImageData(imageData, 0, 0); 
-
-    return imageData;
 }
-
 
 function ease(t) {
     t = Math.max(Math.min(1, t), 0);
