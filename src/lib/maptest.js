@@ -6,7 +6,6 @@ const keyRoomDistance = 32; // distance between key rooms
 
 export const maptest = function () {
     let seed = random('A random seed 2')();
-    console.log(seed);
     let canvas = document.createElement("canvas");
     //let canvas = document.getElementById('map');
     canvas.width = canvas.height = 256;
@@ -32,24 +31,18 @@ export const maptest = function () {
     let kr2 = new KeyRoom(new Position(5, 4));
     let point2 = kr2.position.scalar(keyRoomDistance);
     pset(imageData, point2.x, point2.y, 255, 0, 0);
+    
     let previous = point;
 
+    // Generate path to EAST
     for (let index = 1; index < keyRoomDistance; index++) {
         let noise = ((perlin(seed, (point.x + index) / 10, point.y / 10) - .5) * 2) * 20;
-
         let targetY =  noise * ease((index+1) / keyRoomDistance) + point.y;
-
-       // let target = new Position(point.x + index, targetY);
-
         let points = previous.y - ~~targetY;
-
         let m_sign = points > 0 ? 1 : -1;
         for (let i = 0; i < Math.abs(points); i++) {
-            console.log(index, i, ~m_sign ? 'north' : 'south');
             let x = (point.x + index);
             let y = (previous.y - (i * m_sign));
-
-            console.log(index, x, y);
             let p = (x + y * imageData.width) * 4;
             imageData.data[p + 2] = 255;
             imageData.data[p + (points > 0 ? 2 : 0)] = 255;
@@ -62,6 +55,33 @@ export const maptest = function () {
         imageData.data[p + 1] = 255;
         imageData.data[p + 3] = 255;
         previous = new Position(point.x + index, ~~targetY);
+    }
+    
+    previous = point;
+    // Generate path to SOUTH
+    for (let index = 1; index < keyRoomDistance; index++) {
+        let noise = ((perlin(seed, point.x / 10, (point.y + index) / 10) - .5) * 2) * 20;
+        let targetX =  noise * ease((index+1) / keyRoomDistance) + point.x;
+        let points = previous.x - ~~targetX;
+        let m_sign = points > 0 ? 1 : -1;
+        for (let i = 0; i < Math.abs(points); i++) {
+            let x = (previous.x - (i * m_sign));
+            let y = (point.y + index);
+            let p = (x + y * imageData.width) * 4;
+            if(points > 0){
+                imageData.data[p + 2] = 255;
+            }
+            imageData.data[p + 1] = 255;
+            imageData.data[p + 3] = 255;
+        }
+
+        let x = previous.x - points;
+        let y = point.y + index;
+        let p = (x + y * imageData.width) * 4;
+        imageData.data[p + 0] = 255;
+        imageData.data[p + 2] = 255;
+        imageData.data[p + 3] = 255;
+        previous = new Position(~~targetX, point.y + index);
     }
 
     kr = new KeyRoom(new Position(3, 4, 4));
