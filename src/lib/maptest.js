@@ -125,22 +125,16 @@ function drawExits(exit, x, y, imageData) {
     let pIndex = (x + y * imageData.width) * 4;
     switch (exit) {
         case Exits.EAST:
-            imageData.data[pIndex + 1] = 255;
-            imageData.data[pIndex + 3] = 255;
+            imageData.data[pIndex] |= 1 << 0; 
             break;
         case Exits.SOUTH:
-            imageData.data[pIndex + 0] = 255;
-            imageData.data[pIndex + 2] = 255;
-            imageData.data[pIndex + 3] = 255;
+            imageData.data[pIndex] |= 1 << 1;
             break;
         case Exits.NORTH:
-            imageData.data[pIndex + 2] = 255;
-            imageData.data[pIndex + 3] = 255;
+            imageData.data[pIndex] |= 1 << 2;
             break;
-        case Exits.WEST:
-            imageData.data[pIndex + 1] = 255;
-            imageData.data[pIndex + 2] = 255;
-            imageData.data[pIndex + 3] = 255;
+        case Exits.WEST: 
+            imageData.data[pIndex] |= 1 << 3;
             break;
         default:
             console.error("Incorrect Exit");

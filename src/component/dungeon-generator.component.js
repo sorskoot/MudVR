@@ -125,7 +125,7 @@ export default AFRAME.registerComponent('dungeon-generator', {
         for (let x = 0; x < 256; x++) {
             for (let y = 0; y < 256; y++) {
                 let p = (x + y * imageData.width) * 4; 
-                if(imageData.data[p+3]===255){
+                if(imageData.data[p] !== 0){
                     this.plane = document.createElement('a-plane');
                     this.el.appendChild(this.plane);
                     this.plane.setAttribute('rotation', '-90 0 0');
