@@ -4,13 +4,20 @@ import { perlin, random } from '../lib/random';
 
 const keyRoomDistance = 32; // distance between key rooms
 
+class Exits {
+    static get EAST() { return 1 }
+    static get SOUTH() { return 2 }
+    static get WEST() { return 3 }
+    static get NORTH() { return 4 }
+}
+
 export const maptest = function () {
     let seed = random('A random seed 2')();
     let canvas = document.createElement("canvas");
     //let canvas = document.getElementById('map');
     canvas.width = canvas.height = 256;
-
     let ctx = canvas.getContext("2d");
+
 
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -29,47 +36,47 @@ export const maptest = function () {
     pset(imageData, point.x, point.y, 255, 0, 0);
     GeneratePaths(point, seed, imageData);
 
-    kr = new KeyRoom(new Position(5, 4));
-    point = kr.position.scalar(keyRoomDistance);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-    GeneratePaths(point, seed, imageData);
+    // kr = new KeyRoom(new Position(5, 4));
+    // point = kr.position.scalar(keyRoomDistance);
+    // pset(imageData, point.x, point.y, 255, 0, 0);
+    // GeneratePaths(point, seed, imageData);
 
-    kr = new KeyRoom(new Position(3, 4, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-    GeneratePaths(point, seed, imageData);
+    // kr = new KeyRoom(new Position(3, 4, 4));
+    // point = kr.position.scalar(32);
+    // pset(imageData, point.x, point.y, 255, 0, 0);
+    // GeneratePaths(point, seed, imageData);
 
-    kr = new KeyRoom(new Position(3, 3, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-    GeneratePaths(point, seed, imageData);
+    // kr = new KeyRoom(new Position(3, 3, 4));
+    // point = kr.position.scalar(32);
+    // pset(imageData, point.x, point.y, 255, 0, 0);
+    // GeneratePaths(point, seed, imageData);
 
-    kr = new KeyRoom(new Position(4, 3, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-    GeneratePaths(point, seed, imageData);
+    // kr = new KeyRoom(new Position(4, 3, 4));
+    // point = kr.position.scalar(32);
+    // pset(imageData, point.x, point.y, 255, 0, 0);
+    // GeneratePaths(point, seed, imageData);
 
-    kr = new KeyRoom(new Position(5, 3, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-    GeneratePaths(point, seed, imageData);
+    // kr = new KeyRoom(new Position(5, 3, 4));
+    // point = kr.position.scalar(32);
+    // pset(imageData, point.x, point.y, 255, 0, 0);
+    // GeneratePaths(point, seed, imageData);
 
-    kr = new KeyRoom(new Position(3, 5, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-    GeneratePaths(point, seed, imageData);
+    // kr = new KeyRoom(new Position(3, 5, 4));
+    // point = kr.position.scalar(32);
+    // pset(imageData, point.x, point.y, 255, 0, 0);
+    // GeneratePaths(point, seed, imageData);
 
-    kr = new KeyRoom(new Position(4, 5, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-    GeneratePaths(point, seed, imageData);
+    // kr = new KeyRoom(new Position(4, 5, 4));
+    // point = kr.position.scalar(32);
+    // pset(imageData, point.x, point.y, 255, 0, 0);
+    // GeneratePaths(point, seed, imageData);
 
-    kr = new KeyRoom(new Position(5, 5, 4));
-    point = kr.position.scalar(32);
-    pset(imageData, point.x, point.y, 255, 0, 0);
-    GeneratePaths(point, seed, imageData);
-    
-    ctx.putImageData(imageData, 0, 0); 
+    // kr = new KeyRoom(new Position(5, 5, 4));
+    // point = kr.position.scalar(32);
+    // pset(imageData, point.x, point.y, 255, 0, 0);
+    // GeneratePaths(point, seed, imageData);
+
+    ctx.putImageData(imageData, 0, 0);
 
     return imageData;
 }
@@ -87,15 +94,12 @@ function GeneratePaths(point, seed, imageData) {
             let x = (point.x + index);
             let y = (previous.y - (i * m_sign));
             let p = (x + y * imageData.width) * 4;
-            imageData.data[p + 2] = 255;
-            imageData.data[p + (points > 0 ? 2 : 0)] = 255;
-            imageData.data[p + 3] = 255;
+            drawExits((points > 0 ? Exits.SOUTH : Exits.NORTH), x, y, imageData);
         }
         let x = point.x + index;
         let y = previous.y - points;
-        let p = (x + y * imageData.width) * 4;
-        imageData.data[p + 1] = 255;
-        imageData.data[p + 3] = 255;
+        drawExits(Exits.EAST, x, y, imageData);
+
         previous = new Position(point.x + index, ~~targetY);
     }
     previous = point;
@@ -108,26 +112,45 @@ function GeneratePaths(point, seed, imageData) {
         for (let i = 0; i < Math.abs(points); i++) {
             let x = (previous.x - (i * m_sign));
             let y = (point.y + index);
-            let p = (x + y * imageData.width) * 4;
-            if (points > 0) {
-                imageData.data[p + 2] = 255;
-            }
-            imageData.data[p + 1] = 255;
-            imageData.data[p + 3] = 255;
+            drawExits(points > 0 ? Exits.WEST : Exits.EAST, x, y, imageData);
         }
         let x = previous.x - points;
         let y = point.y + index;
-        let p = (x + y * imageData.width) * 4;
-        imageData.data[p + 0] = 255;
-        imageData.data[p + 2] = 255;
-        imageData.data[p + 3] = 255;
+        drawExits(Exits.SOUTH, x, y, imageData);
         previous = new Position(~~targetX, point.y + index);
+    }
+}
+
+function drawExits(exit, x, y, imageData) {
+    let pIndex = (x + y * imageData.width) * 4;
+    switch (exit) {
+        case Exits.EAST:
+            imageData.data[pIndex + 1] = 255;
+            imageData.data[pIndex + 3] = 255;
+            break;
+        case Exits.SOUTH:
+            imageData.data[pIndex + 0] = 255;
+            imageData.data[pIndex + 2] = 255;
+            imageData.data[pIndex + 3] = 255;
+            break;
+        case Exits.NORTH:
+            imageData.data[pIndex + 2] = 255;
+            imageData.data[pIndex + 3] = 255;
+            break;
+        case Exits.WEST:
+            imageData.data[pIndex + 1] = 255;
+            imageData.data[pIndex + 2] = 255;
+            imageData.data[pIndex + 3] = 255;
+            break;
+        default:
+            console.error("Incorrect Exit");
+            break;
     }
 }
 
 function ease(t) {
     t = Math.max(Math.min(1, t), 0);
-    return 1 - t*t*t*t*t ;
+    return 1 - t * t * t * t * t;
 }
 
 function pset(imageData, x, y, r, g, b, a = 255) {
