@@ -2,11 +2,13 @@ import Position from '../classes/Position';
 import KeyRoom from '../classes/KeyRoom';
 import { perlin, random } from '../lib/random';
 
+const keyRoomDistance = 32; // distance between key rooms
+
 export const maptest = function () {
-    let seed = random('Another random seed')();
+    let seed = random('A random seed 2')();
     console.log(seed);
-    //let canvas = document.createElement("canvas");
-    let canvas = document.getElementById('map');
+    let canvas = document.createElement("canvas");
+    //let canvas = document.getElementById('map');
     canvas.width = canvas.height = 256;
 
     let ctx = canvas.getContext("2d");
@@ -23,119 +25,44 @@ export const maptest = function () {
     // Start in the middle (spawn keyroom) - This will be spawn as well
     // Create a 3 by 3 grid of keyrooms- where the outer keyroom are in the corners
 
-    // pset(imageData, 128, 128, 0, 255, 0, 255);
-    // pset(imageData, 128 - 32, 128, 255, 0, 0, 255);
-    // pset(imageData, 128 - 32 - 32, 128, 255, 0, 0, 255);
-    // pset(imageData, 128 + 32, 128, 255, 0, 0, 255);
-    // pset(imageData, 128 + 32 + 32, 128, 255, 0, 0, 255);
-    let doorDirections = [];
     let kr = new KeyRoom(new Position(4, 4));
-    let point = kr.position.scalar(32);
-    let n = ~~(((perlin(seed, point.x / 10, point.y / 10) - .5) * 2) * 10);
+    let point = kr.position.scalar(keyRoomDistance);
     pset(imageData, point.x, point.y, 255, 0, 0);
 
     let kr2 = new KeyRoom(new Position(5, 4));
-    let point2 = kr2.position.scalar(32);
+    let point2 = kr2.position.scalar(keyRoomDistance);
     pset(imageData, point2.x, point2.y, 255, 0, 0);
-    
-    let lasty = point.y;
-
-    let target;
     let previous = point;
 
-    for (let index = 1; index < 32; index++) {
-        let noise = ((perlin(seed, (point.x + index) / 10, point.y / 10) - .5) * 2) * 20 + point.y;
-        //  pset(imageData, point.x + index, ~~noise, 0, 0, 255);
-        target = new Position(point.x + index, noise);
-     
-        
-        let points = previous.y - ~~noise;
-        //    console.log(target);
-      //  console.log(points);
-        // doorDirections.push(...new Array(Math.abs(points)).fill(points > 0 ? 'n' : 's'));
-        // doorDirections.push('e');
-      
-      
+    for (let index = 1; index < keyRoomDistance; index++) {
+        let noise = ((perlin(seed, (point.x + index) / 10, point.y / 10) - .5) * 2) * 20;
+
+        let targetY =  noise * ease((index+1) / keyRoomDistance) + point.y;
+
+       // let target = new Position(point.x + index, targetY);
+
+        let points = previous.y - ~~targetY;
+
         let m_sign = points > 0 ? 1 : -1;
-       // pset(imageData, point.x + index, previous.y, 128, 0, 128);
         for (let i = 0; i < Math.abs(points); i++) {
-            console.log(index, i, ~m_sign?'north':'south');
+            console.log(index, i, ~m_sign ? 'north' : 'south');
             let x = (point.x + index);
             let y = (previous.y - (i * m_sign));
-            console.log(index,x,y);
-          //  pset(imageData, point.x + index, previous.y - (i * m_sign), 0, 0, 128);
-            
-           let p = (x + y * imageData.width) * 4;
-           imageData.data[p + 2] = 255;
-           imageData.data[p + (points > 0 ? 2 : 0)] = 255;
-           imageData.data[p + 3] = 255;
+
+            console.log(index, x, y);
+            let p = (x + y * imageData.width) * 4;
+            imageData.data[p + 2] = 255;
+            imageData.data[p + (points > 0 ? 2 : 0)] = 255;
+            imageData.data[p + 3] = 255;
         }
-        
-        let x = point.x + index ;
+
+        let x = point.x + index;
         let y = previous.y - points;
         let p = (x + y * imageData.width) * 4;
         imageData.data[p + 1] = 255;
         imageData.data[p + 3] = 255;
-        console.log(index,x,y);
-        //pset(imageData, point.x + index + 1, previous.y - points, 0, 255, 255);
-        // let angle = previous.angle2d(target);
-        // let dist = previous.dist(target);
-        // let stop = 10;
-        // let lastDistance = 999;
-        // let direction = angle > 0;
-        // while (direction == angle > 0) {
-        //     lastDistance = dist;
-
-        //     if (angle < 45 && angle > -45) {
-        //         doorDirections.push('e');
-        //         previous.x++;
-        //     } else {
-        //         if (angle < 0) {
-        //             doorDirections.push('s');
-        //             previous.y--;
-        //         }
-        //         else {
-        //             doorDirections.push('n');
-        //             previous.y++;
-        //         }
-        //     }
-        //     angle = previous.angle2d(target);
-        //     dist = previous.dist(target);
-        //     stop--
-        //     if (stop <= 0) break;
-        // }
-        previous = new Position(point.x + index, ~~noise);
-
-        //     lasty = noise;
-        //     while (Math.abs(magicvalue) > 1){
-        //     //    console.log(index, magicvalue, noise);
-        //         doorDirections.push(doorDirection(magicvalue));
-        //         magicvalue += magicvalue < 0 ? 1 : -1;
-        //     };
-        //  //   console.log(index, magicvalue, noise);
-        //     doorDirections.push(doorDirection(magicvalue));
-       
+        previous = new Position(point.x + index, ~~targetY);
     }
-
-    // for (let index = 1; index < 32; index++) {
-    //     let noise = ((perlin(seed, (point.x) / 10, (point.y + index) / 10) - .5) * 2) * 10 + point.y;
-    //     pset(imageData, ~~noise, point.y + index, 0, 0, 255);
-    // }
-
-    // for (let index = 1; index < 32; index++) {
-    //     let noise = ((perlin(seed, (point.x - index) / 10, point.y / 10) - .5) * 2) * 10 + point.y;
-    //     pset(imageData, point.x - index, ~~noise, 0, 0, 255);
-    // }
-
-    // for (let index = 1; index < 32; index++) {
-    //     let noise = ((perlin(seed, (point.x) / 10, (point.y - index) / 10) - .5) * 2) * 10 + point.y;
-    //     pset(imageData, ~~noise, point.y - index, 0, 0, 255);
-    // }
-
-    // for (let index = 1; index < 32; index++) {
-    //     let noise = ((perlin(seed, (point.x) / 10, (point.y - index-32) / 10) - .5) * 2) * 10 + point.y;
-    //     pset(imageData, ~~noise, point.y - index-32, 0, 0, 255);
-    // }
 
     kr = new KeyRoom(new Position(3, 4, 4));
     point = kr.position.scalar(32);
@@ -165,28 +92,15 @@ export const maptest = function () {
     point = kr.position.scalar(32);
     pset(imageData, point.x, point.y, 255, 0, 0);
 
-    ctx.putImageData(imageData, 0, 0); // at coords 0,0
+    ctx.putImageData(imageData, 0, 0); 
 
     return imageData;
-    //return doorDirections;
 }
 
 
-function doorDirection(magicvalue) {
-    if (~~magicvalue == 0) {
-        // console.log('door east');
-        return 'e';
-    }
-    else {
-        if (~~magicvalue < 0) {
-            // console.log('door south');
-            return 's';
-        }
-        else {
-            //  console.log('door north');
-            return 'n';
-        }
-    }
+function ease(t) {
+    t = Math.max(Math.min(1, t), 0);
+    return 1 - t*t*t*t*t ;
 }
 
 function pset(imageData, x, y, r, g, b, a = 255) {

@@ -21,6 +21,9 @@
 - http://computationalcreativity.net/iccc2019/
 - http://tracery.io/
 - https://www.reddit.com/r/gamedev/comments/4vnvbe/an_attempt_at_procedurally_generating_quests_that/
+- https://github.com/mewo2/naming-language/blob/master/language.js
+
+
 
 ## random ideas
 - integrate with Discord
