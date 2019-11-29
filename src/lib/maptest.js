@@ -1,15 +1,11 @@
 import Position from '../classes/Position';
 import KeyRoom from '../classes/KeyRoom';
 import { perlin, random } from '../lib/random';
+import Exits from '../classes/Exits';
 
 const keyRoomDistance = 32; // distance between key rooms
 
-class Exits {
-    static get EAST() { return 1 }
-    static get SOUTH() { return 2 }
-    static get WEST() { return 3 }
-    static get NORTH() { return 4 }
-}
+
 
 export const maptest = function () {
     let seed = random('A random seed 2')();
@@ -36,45 +32,45 @@ export const maptest = function () {
     pset(imageData, point.x, point.y, 255, 0, 0);
     GeneratePaths(point, seed, imageData);
 
-    // kr = new KeyRoom(new Position(5, 4));
-    // point = kr.position.scalar(keyRoomDistance);
-    // pset(imageData, point.x, point.y, 255, 0, 0);
-    // GeneratePaths(point, seed, imageData);
+    kr = new KeyRoom(new Position(5, 4));
+    point = kr.position.scalar(keyRoomDistance);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
 
-    // kr = new KeyRoom(new Position(3, 4, 4));
-    // point = kr.position.scalar(32);
-    // pset(imageData, point.x, point.y, 255, 0, 0);
-    // GeneratePaths(point, seed, imageData);
+    kr = new KeyRoom(new Position(3, 4, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
 
-    // kr = new KeyRoom(new Position(3, 3, 4));
-    // point = kr.position.scalar(32);
-    // pset(imageData, point.x, point.y, 255, 0, 0);
-    // GeneratePaths(point, seed, imageData);
+    kr = new KeyRoom(new Position(3, 3, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
 
-    // kr = new KeyRoom(new Position(4, 3, 4));
-    // point = kr.position.scalar(32);
-    // pset(imageData, point.x, point.y, 255, 0, 0);
-    // GeneratePaths(point, seed, imageData);
+    kr = new KeyRoom(new Position(4, 3, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
 
-    // kr = new KeyRoom(new Position(5, 3, 4));
-    // point = kr.position.scalar(32);
-    // pset(imageData, point.x, point.y, 255, 0, 0);
-    // GeneratePaths(point, seed, imageData);
+    kr = new KeyRoom(new Position(5, 3, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
 
-    // kr = new KeyRoom(new Position(3, 5, 4));
-    // point = kr.position.scalar(32);
-    // pset(imageData, point.x, point.y, 255, 0, 0);
-    // GeneratePaths(point, seed, imageData);
+    kr = new KeyRoom(new Position(3, 5, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
 
-    // kr = new KeyRoom(new Position(4, 5, 4));
-    // point = kr.position.scalar(32);
-    // pset(imageData, point.x, point.y, 255, 0, 0);
-    // GeneratePaths(point, seed, imageData);
+    kr = new KeyRoom(new Position(4, 5, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
 
-    // kr = new KeyRoom(new Position(5, 5, 4));
-    // point = kr.position.scalar(32);
-    // pset(imageData, point.x, point.y, 255, 0, 0);
-    // GeneratePaths(point, seed, imageData);
+    kr = new KeyRoom(new Position(5, 5, 4));
+    point = kr.position.scalar(32);
+    pset(imageData, point.x, point.y, 255, 0, 0);
+    GeneratePaths(point, seed, imageData);
 
     ctx.putImageData(imageData, 0, 0);
 
@@ -123,23 +119,25 @@ function GeneratePaths(point, seed, imageData) {
 
 function drawExits(exit, x, y, imageData) {
     let pIndex = (x + y * imageData.width) * 4;
-    switch (exit) {
-        case Exits.EAST:
-            imageData.data[pIndex] |= 1 << 0; 
-            break;
-        case Exits.SOUTH:
-            imageData.data[pIndex] |= 1 << 1;
-            break;
-        case Exits.NORTH:
-            imageData.data[pIndex] |= 1 << 2;
-            break;
-        case Exits.WEST: 
-            imageData.data[pIndex] |= 1 << 3;
-            break;
-        default:
-            console.error("Incorrect Exit");
-            break;
-    }
+    imageData.data[pIndex] |= exit;
+
+    // switch (exit) {
+    //     case Exits.EAST:
+    //         imageData.data[pIndex] |= Exits.EAST; 
+    //         break;
+    //     case Exits.SOUTH:
+    //         imageData.data[pIndex] |= Exits.SOUTH;
+    //         break;
+    //     case Exits.NORTH:
+    //         imageData.data[pIndex] |= Exits.NORTH;
+    //         break;
+    //     case Exits.WEST: 
+    //         imageData.data[pIndex] |= Exits.WEST;
+    //         break;
+    //     default:
+    //         console.error("Incorrect Exit");
+    //         break;
+    // }
 }
 
 function ease(t) {

@@ -1,6 +1,6 @@
 import { random } from '../lib/random';
 import { maptest } from '../lib/maptest';
-
+import Exits from '../classes/Exits';
 
 export default AFRAME.registerComponent('dungeon-generator', {
     schema: {
@@ -8,40 +8,20 @@ export default AFRAME.registerComponent('dungeon-generator', {
             default: 'dungeon'
         },
         gridPosition: {
-            type: 'vec3'
+            type: 'vec3',
+            default: { x: 128, y: 0, z: 128 }
         }
     },
 
     init: function () {
-        let directions = maptest();
-        this.generateWorld(directions);
-        return;
-
-        console.log(directions);
+        this.map = maptest();
+        //   this.generateWorld(map);
+        //return;
         this.plane = document.createElement('a-plane');
         this.el.appendChild(this.plane);
         this.plane.setAttribute('rotation', '-90 0 0');
         this.plane.setAttribute('scale', '5 5 5');
-        let x = 0, y = 0;
-        for (let index = 0; index < directions.length; index++) {
-            const element = directions[index];
-            switch (directions[index]) {
-                case 'e':
-                    x += 1;
-                    break;
-                case 'n':
-                    y -= 1;
-                    break;
-                case 's':
-                    y += 1
-                    break;
-            }
-            let cube = document.createElement('a-box');
-            cube.setAttribute('scale', '.5 .5 .5');
-            cube.setAttribute('position', { x: x, y: 0, z: y });
-            cube.setAttribute('color','red');
-            this.el.appendChild(cube);
-        }
+
         this.exit = {
             north: document.createElement('a-plane'),
             south: document.createElement('a-plane'),
@@ -84,10 +64,10 @@ export default AFRAME.registerComponent('dungeon-generator', {
         this.exit.east.addEventListener('click', e => this.navigate({ x: +1, y: 0, z: 0 }));
         this.exit.west.addEventListener('click', e => this.navigate({ x: -1, y: 0, z: 0 }));
 
-        //   this.generateRoom();
+        this.generateRoom();
     },
     update() {
-        //  this.generateRoom();
+        this.generateRoom();
     },
     navigate(direction) {
         this.data.gridPosition = {
@@ -110,28 +90,34 @@ export default AFRAME.registerComponent('dungeon-generator', {
             random(`${this.getBasicSeed()}-room${p.x},${p.y},${p.z}-groundcolor`)() % groundColors.length;
         this.plane.setAttribute('color', groundColors[groundColorIndex]);
 
-        setExit(this.exit.north, random(`${this.getBasicSeed()}-exit${p.x},${p.y},${p.z - .5}`)(), groundColors);
-        setExit(this.exit.south, random(`${this.getBasicSeed()}-exit${p.x},${p.y},${p.z + .5}`)(), groundColors);
-        setExit(this.exit.east, random(`${this.getBasicSeed()}-exit${p.x + .5},${p.y},${p.z}`)(), groundColors);
-        setExit(this.exit.west, random(`${this.getBasicSeed()}-exit${p.x - .5},${p.y},${p.z}`)(), groundColors);
+        let pIndex = (p.x + p.z * this.map.width) * 4;
+
+        setExit(this.exit.east, this.map.data[pIndex] & Exits.EAST, random(`${this.getBasicSeed()}-exit${p.x + .5},${p.y},${p.z}`)(), groundColors);
+        setExit(this.exit.south, this.map.data[pIndex] & Exits.SOUTH, random(`${this.getBasicSeed()}-exit${p.x},${p.y},${p.z + .5}`)(), groundColors);
+        setExit(this.exit.north, this.map.data[pIndex] & Exits.NORTH, random(`${this.getBasicSeed()}-exit${p.x},${p.y},${p.z - .5}`)(), groundColors);
+        setExit(this.exit.west, this.map.data[pIndex] & Exits.WEST, random(`${this.getBasicSeed()}-exit${p.x - .5},${p.y},${p.z}`)(), groundColors);
+
+        // setExit(this.exit.north, random(`${this.getBasicSeed()}-exit${p.x},${p.y},${p.z - .5}`)(), groundColors);
+        // setExit(this.exit.south, random(`${this.getBasicSeed()}-exit${p.x},${p.y},${p.z + .5}`)(), groundColors);
+        // setExit(this.exit.east, random(`${this.getBasicSeed()}-exit${p.x + .5},${p.y},${p.z}`)(), groundColors);
+        // setExit(this.exit.west, random(`${this.getBasicSeed()}-exit${p.x - .5},${p.y},${p.z}`)(), groundColors);
     },
     getBasicSeed: function () {
         let p = this.data.gridPosition;
         return `${this.data.seed}`
     },
-    generateWorld:function(imageData){
+    generateWorld: function (imageData) {
         // keyroom 4,4 = 0,0,0 in world = 128,128 in map
-       
         for (let x = 0; x < 256; x++) {
             for (let y = 0; y < 256; y++) {
-                let p = (x + y * imageData.width) * 4; 
-                if(imageData.data[p] !== 0){
+                let p = (x + y * imageData.width) * 4;
+                if (imageData.data[p] !== 0) {
                     this.plane = document.createElement('a-plane');
                     this.el.appendChild(this.plane);
                     this.plane.setAttribute('rotation', '-90 0 0');
                     //this.plane.setAttribute('scale', '5 5 5');
-                    this.plane.setAttribute('position',{x:x-128,y:0,z:y-128});
-                    this.plane.setAttribute('color',`#${(imageData.data[p]).toString(16).padStart(2,'0')}${imageData.data[p+1].toString(16).padStart(2,'0')}${imageData.data[p+2].toString(16).padStart(2,'0')}`)
+                    this.plane.setAttribute('position', { x: x - 128, y: 0, z: y - 128 });
+                    this.plane.setAttribute('color', `#${(imageData.data[p]).toString(16).padStart(2, '0')}${imageData.data[p + 1].toString(16).padStart(2, '0')}${imageData.data[p + 2].toString(16).padStart(2, '0')}`)
                 }
             }
         }
@@ -140,9 +126,9 @@ export default AFRAME.registerComponent('dungeon-generator', {
 
 
 
-function setExit(el, seed, groundColors) {
-    el.setAttribute('visible', seed % 2 ? 'true' : 'false');
-    if (seed % 2) {
+function setExit(el, visible, seed, groundColors) {
+    el.setAttribute('visible', !!visible);
+    if (visible) {
         el.classList.add('clickable');
     } else {
         el.classList.remove('clickable');
